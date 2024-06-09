@@ -155,7 +155,11 @@ P.S. You can delete this when you're done too. It's your config now! :)
   vim.opt.cursorline = true
 
   -- Minimal number of screen lines to keep above and below the cursor.
-  vim.opt.scrolloff = 7
+  vim.opt.scrolloff = 5
+  vim.opt.autoindent = true
+  vim.opt.expandtab = true
+  vim.opt.tabstop = 2
+  vim.opt.shiftwidth = 2
 
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
@@ -369,6 +373,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
           --   },
           -- },
           -- pickers = {}
+          defaults = {
+            file_ignore_patterns = { 'node_modules' },
+          },
           extensions = {
             ['ui-select'] = {
               require('telescope.themes').get_dropdown(),
@@ -636,7 +643,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
           --
           -- You can use a sub-list to tell conform to run *until* a formatter
           -- is found.
-          javascript = { { 'prettierd', 'prettier', 'eslintd', 'eslint_d', 'eslint' } },
+          javascript = { { 'eslint_d', 'eslint', 'prettierd', 'prettier' } },
         },
       },
     },
