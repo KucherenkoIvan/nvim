@@ -843,7 +843,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
           --    https://github.com/pmizio/typescript-tools.nvim
           --
           -- But for many setups, the LSP (`tsserver`) will work just fine
-          tsserver = {},
+          ts_ls = {},
           --
           -- go templ
           -- templ = {},
