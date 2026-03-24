@@ -115,7 +115,7 @@ if vim.g.vscode then
     { -- Fuzzy Finder (files, lsp, etc)
       'nvim-telescope/telescope.nvim',
       event = 'VimEnter',
-      branch = '0.1.x',
+      branch = 'master',
       dependencies = {
         'nvim-lua/plenary.nvim',
         { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -361,6 +361,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 
   -- Enable break indent
   vim.opt.breakindent = true
+  -- Allow switching buffers (e.g. from Telescope) without forcing a write first.
+  vim.opt.hidden = true
 
   -- Save undo history
   vim.opt.undofile = true
@@ -488,31 +490,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
     -- "gc" to comment visual regions/lines
     { 'numToStr/Comment.nvim', opts = {} },
 
-    { 'neovim/nvim-lspconfig' },
-    { 'jose-elias-alvarez/null-ls.nvim' },
-    {
-      'MunifTanjim/eslint.nvim',
-      opts = {
-        bin = 'eslint', -- or `eslint_d`
-        code_actions = {
-          enable = true,
-          apply_on_save = {
-            enable = true,
-            types = { 'directive', 'problem', 'suggestion', 'layout' },
-          },
-          disable_rule_comment = {
-            enable = true,
-            location = 'separate_line', -- or `same_line`
-          },
-        },
-        diagnostics = {
-          enable = true,
-          report_unused_disable_directives = false,
-          run_on = 'type', -- or `save`
-        },
-      },
-    },
-
     -- Here is a more advanced example where we pass configuration
     -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
     --    require('gitsigns').setup({ ... })
@@ -575,7 +552,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
     { -- Fuzzy Finder (files, lsp, etc)
       'nvim-telescope/telescope.nvim',
       event = 'VimEnter',
-      branch = '0.1.x',
+      branch = 'master',
       dependencies = {
         'nvim-lua/plenary.nvim',
         { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -901,9 +878,33 @@ P.S. You can delete this when you're done too. It's your config now! :)
           -- You can use a sub-list to tell conform to run *until* a formatter
           -- is found.
           javascript = { { 'eslint_d', 'eslint', 'prettierd', 'prettier' } },
-          c = { 'clangd' },
+          c = { 'clang-format' },
         },
       },
+    },
+    { -- Linting
+      'mfussenegger/nvim-lint',
+      event = { 'BufReadPre', 'BufNewFile' },
+      config = function()
+        local ok, lint = pcall(require, 'lint')
+        if not ok then
+          return
+        end
+        lint.linters_by_ft = {
+          javascript = { 'eslint_d' },
+          javascriptreact = { 'eslint_d' },
+          typescript = { 'eslint_d' },
+          typescriptreact = { 'eslint_d' },
+        }
+
+        local lint_augroup = vim.api.nvim_create_augroup('nvim-lint', { clear = true })
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+          group = lint_augroup,
+          callback = function()
+            lint.try_lint()
+          end,
+        })
+      end,
     },
 
     { -- Autocompletion
@@ -1100,7 +1101,12 @@ P.S. You can delete this when you're done too. It's your config now! :)
         -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
         ---@diagnostic disable-next-line: missing-fields
-        require('nvim-treesitter.configs').setup(opts)
+        local ok_ts, ts = pcall(require, 'nvim-treesitter')
+        if ok_ts then
+          ts.setup(opts)
+        else
+          require('nvim-treesitter.configs').setup(opts)
+        end
 
         -- There are additional nvim-treesitter modules that you can use to interact
         -- with nvim-treesitter. You should go explore a few and see what interests you:

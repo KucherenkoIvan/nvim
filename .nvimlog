@@ -1,0 +1,2 @@
+WRN 2026-03-24T13:54:53.969 ?.70554    server_start:199: Failed to start server: operation not permitted: /var/folders/6y/yz172y357rgcmt0hrmk3gv7c0000gp/T/nvim.plrk/9sEIln/nvim.70554.0
+WRN 2026-03-24T13:55:43.167 ?.71120    server_start:199: Failed to start server: operation not permitted: /var/folders/6y/yz172y357rgcmt0hrmk3gv7c0000gp/T/nvim.plrk/JqPJof/nvim.71120.0
