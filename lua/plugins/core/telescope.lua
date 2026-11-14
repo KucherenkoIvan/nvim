@@ -16,8 +16,12 @@ return {
   },
   config = function()
     require('telescope').setup {
-      defaults = {
-        file_ignore_patterns = { 'node_modules' },
+      defaults = {},
+      pickers = {
+        find_files = { file_ignore_patterns = { 'node_modules' } },
+        live_grep = { file_ignore_patterns = { 'node_modules' } },
+        grep_string = { file_ignore_patterns = { 'node_modules' } },
+        oldfiles = { file_ignore_patterns = { 'node_modules' } },
       },
       extensions = {
         ['ui-select'] = {
